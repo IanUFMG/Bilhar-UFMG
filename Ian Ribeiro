@@ -1,0 +1,2109 @@
+Web VPython 3.2
+from vpython import *
+
+# Parâmetros da cena
+scene = canvas(width=1150, height=755, center=vector(0, 0, 0), background=color.white)#scene = canvas(width=800, height=600, center=vector(0, 0, 0), background=color.cyan)
+coef_atrito = 0.99
+# Criação do terreno (plano verde)
+terreno = box(pos=vector(0, -0.195, 0), size=vector(20, 0.1, 10), color=color.green)
+parede1 = box(pos=vector(4.9, 0, 5.01), size=vector(9.3, 1, 0), color=color.green)
+parede2 = box(pos=vector(4.9, 0, -5.01), size=vector(9.3, 1, 0), color=color.green)
+parede3 = box(pos=vector(10, 0, 0), size=vector(0.01, 1, 9.5), color=color.green)
+parede4 = box(pos=vector(-10, 0, 0), size=vector(0.01, 1, 9.5), color=color.green)
+parede5 = box(pos=vector(-4.9, 0, 5.01), size=vector(9.3, 1, 0), color=color.green)
+parede6 = box(pos=vector(-4.9, 0, -5.01), size=vector(9.3, 1, 0), color=color.green)   #z=-5
+
+#criação do pé da mesa
+pé1=box(pos=vector(-9.7,-2.50,4.65),size=vector(0.5,-4.5,0.5),color=color.gray(0.7))
+pé2=box(pos=vector(-9.7,-2.50,-4.65),size=vector(0.5,-4.5,0.5),color=color.gray(0.7))
+pé3=box(pos=vector(9.7,-2.50,4.65),size=vector(0.5,-4.5,0.5),color=color.gray(0.7))
+pé4=box(pos=vector(9.7,-2.50,-4.65),size=vector(0.5,-4.5,0.5),color=color.gray(0.7))
+
+# Criação dos buracos (cilindros pretos)
+buraco1 = cylinder(pos=vector(9.8, -0.25,4.8), axis=vector(0, 0.2, 0), radius=0.33, color=color.black)
+buraco2 = cylinder(pos=vector(9.8, -0.25,-4.8), axis=vector(0, 0.2, 0), radius=0.33, color=color.black)
+buraco3 = cylinder(pos=vector(-9.8, -0.25,4.8), axis=vector(0, 0.2, 0), radius=0.33, color=color.black)
+buraco4 = cylinder(pos=vector(-9.8, -0.25,-4.8), axis=vector(0, 0.2, 0), radius=0.33, color=color.black)
+buraco5 = cylinder(pos=vector(0, -0.25,-4.8), axis=vector(0, 0.2, 0), radius=0.33, color=color.black)
+buraco6 = cylinder(pos=vector(0, -0.25,4.8), axis=vector(0, 0.2, 0), radius=0.33, color=color.black)
+
+deposito=box(pos=vector(4,-0.6,6),size=vector(5.45,1,2),color=color.white,opacity=0.5)
+# Parâmetros das bolas de sinuca
+bola_sinuca = sphere(pos=vector(0, 0, 0), radius=0.15, color=color.white, v=vector(0, 0, 0))
+bola_sinuca.mass = 0.01
+taco = cylinder(pos=vector(0, 0, 0), axis=vector(0, 0, 1), radius=0.05, color=color.orange)
+
+bola1 = sphere(pos=vector(9.2, 0,4.2), radius=0.15, color=color.yellow, v=vector(0, 0, 0))
+bola2 = sphere(pos=vector(-9.2, 0,-4.19), radius=0.15, color=color.blue, v=vector(0, 0, 0))
+bola3 = sphere(pos=vector(9.2, 0,-4.2), radius=0.15, color=color.red, v=vector(0, 0, 0))
+bola4 = sphere(pos=vector(6,0.0,-4.33), radius=0.15, color=color.purple, v=vector(0, 0, 0))
+bola5 = sphere(pos=vector(5, 0, 0), radius=0.15, color=color.orange, v=vector(0, 0, 0))
+bola6 = sphere(pos=vector(4, 0,0.33), radius=0.15, color=color.cyan, v=vector(0, 0, 0))
+bola7 = sphere(pos=vector(-9.2, 0,4.19), radius=0.15, color=color.gray(0.4), v=vector(0, 0, 0))
+bola8 = sphere(pos=vector(-3, 0, -4), radius=0.15, color=color.black, v=vector(0, 0, 0))
+bola9 = sphere(pos=vector(0, 0,4.2), radius=0.15, color=color.yellow, v=vector(0, 0, 0))
+bola10 = sphere(pos=vector(0., 0,-4.2), radius=0.15, color=color.blue, v=vector(0, 0, 0))
+bola11= sphere(pos=vector(2.15, 0, 3.39), radius=0.15, color=color.red, v=vector(0, 0, 0))
+bola12 = sphere(pos=vector(1.15, 0,-3.01), radius=0.15, color=color.purple, v=vector(0, 0, 0))
+bola13 = sphere(pos=vector(-1.15, 0,-1.39), radius=0.15, color=color.orange, v=vector(0, 0, 0))
+bola14 = sphere(pos=vector(-7.15, 0, -0.79), radius=0.15, color=color.cyan, v=vector(0, 0, 0))
+bola15 = sphere(pos=vector(-7.15, 0,0.79), radius=0.15, color=color.gray(0.4), v=vector(0, 0, 0))
+
+bola1.mass = 0.01
+bola2.mass=0.01
+bola3.mass=0.01
+bola4.mass=0.01
+bola5.mass=0.01
+bola6.mass=0.01
+bola7.mass=0.01
+bola8.mass=0.01
+bola9.mass=0.01
+bola10.mass=0.01
+bola11.mass=0.01
+bola12.mass=0.01
+bola13.mass=0.01
+bola14.mass=0.01
+bola15.mass=0.01
+
+# Função para mover a bola ao clicar nela
+def move_bola(evt):
+    # Calcular a nova velocidade com base na posição e no tamanho do taco
+    taco_pos = vector(scene.mouse.pos.x, 0, scene.mouse.pos.z)
+    taco_size = mag(taco.axis)
+    direcao_taco = norm(taco.axis)
+    fator_velocidade = 1.2  # Ajuste conforme necessário 2.0
+    bola_sinuca.v = fator_velocidade * taco_size * direcao_taco
+    
+
+# Associa a função ao evento de clique na cena
+scene.bind("click", move_bola)
+
+# Loop principal da simulação
+while bola_sinuca.pos.y >= -0.1:  # Continue até que a bola atinja o solo
+    rate(60)
+
+    # Atualiza a posição das bolas de sinuca usando conservação do momento linear
+    bola_sinuca.pos += bola_sinuca.v * 0.01  # 0.01 é a massa
+    bola_sinuca.v *= coef_atrito
+    
+    bola1.v *= coef_atrito
+    bola2.v *= coef_atrito
+    bola3.v *= coef_atrito
+    bola4.v *= coef_atrito
+    bola5.v *= coef_atrito
+    bola6.v *= coef_atrito
+    bola7.v *= coef_atrito
+    bola8.v *= coef_atrito
+    bola9.v *= coef_atrito
+    bola10.v *= coef_atrito
+    bola11.v *= coef_atrito
+    bola12.v *= coef_atrito
+    bola13.v *= coef_atrito
+    bola14.v *= coef_atrito
+    bola15.v *= coef_atrito
+    
+    
+    
+# Atualiza a posição do taco
+    taco.pos = bola_sinuca.pos
+    taco.axis = vector(scene.mouse.pos.x, 0, scene.mouse.pos.y) - bola_sinuca.pos
+
+    # Verifica se a bola de sinuca atinge algum buraco::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    #for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        #if mag(bola_sinuca.pos - buraco.pos) < buraco.radius:
+            #bola_sinuca.visible=True
+            #taco.visible=False
+            #bola_sinuca.pos=vector(6.5,-0.6,5.8)
+            #label(pos=vector(0, 1, 0), text="Bola branca morta", height=20, color=color.red)
+            #break  # A bola de sinuca atingiu um buraco, encerrando a simulação
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola de sinuca e a bola1 usando conservação do momento linear
+    if mag(bola_sinuca.pos - bola1.pos) < bola1.radius * 2 :
+        # Vetor que aponta da bola1 para a bola de sinuca
+        direcao_colisao = norm(bola_sinuca.pos - bola1.pos)
+        # Componente da velocidade na direção da colisão
+        v1_proj = dot(bola1.v, direcao_colisao)
+        v2_proj = dot(bola_sinuca.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v += (v2_proj - v1_proj) * direcao_colisao #* coef_atrito #0.9 *
+        bola_sinuca.v += (v1_proj - v2_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola_sinuca.v *= coef_atrito
+        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola1.pos - bola2.pos) < bola2.radius* 2:
+            # Vetor que aponta da bola1 para a bola 2
+            direcao_colisao = norm(bola1.pos - bola2.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v11_proj = dot(bola1.v, direcao_colisao)
+            v22_proj = dot(bola2.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola1.v +=(v22_proj - v11_proj) * direcao_colisao
+            bola2.v +=  (v11_proj - v22_proj) * direcao_colisao
+            
+            bola1.v *= coef_atrito
+            bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola1.pos - bola3.pos) < bola3.radius* 2:
+            # Vetor que aponta da bola1 para a b3
+            direcao_colisao = norm(bola1.pos - bola3.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v111_proj = dot(bola1.v, direcao_colisao)
+            v222_proj = dot(bola3.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola1.v +=(v222_proj - v111_proj) * direcao_colisao
+            bola3.v += (v111_proj - v222_proj) * direcao_colisao  
+            
+            bola1.v *= coef_atrito
+            bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola1.pos) < bola1.radius* 2:
+       
+        direcao_colisao = norm(bola4.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v1111_proj = dot(bola1.v, direcao_colisao)
+        v2222_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v2222_proj - v1111_proj) * direcao_colisao
+        bola4.v +=  (v1111_proj - v2222_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola4.v *= coef_atrito
+        
+#--------------------------------------------------------------------------------------------------
+    
+    if mag(bola5.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v11111_proj = dot(bola1.v, direcao_colisao)
+        v22222_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v22222_proj - v11111_proj) * direcao_colisao
+        bola5.v +=   (v11111_proj - v22222_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola5.v *= coef_atrito
+                
+#--------------------------------------------------------------------------------------------------
+    
+    if mag(bola6.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v111111_proj = dot(bola1.v, direcao_colisao)
+        v222222_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v222222_proj - v111111_proj) * direcao_colisao
+        bola6.v +=  (v111111_proj - v222222_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola6.v *= coef_atrito
+        
+#--------------------------------------------------------------------------------------------------
+    
+    if mag(bola7.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v1111111_proj = dot(bola1.v, direcao_colisao)
+        v2222222_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v2222222_proj - v1111111_proj) * direcao_colisao
+        bola7.v +=  (v1111111_proj - v2222222_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola7.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola8 e a bola1 usando conservação do momento linear
+    if mag(bola8.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v3_proj = dot(bola1.v, direcao_colisao)
+        v4_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v += (v4_proj - v3_proj) * direcao_colisao
+        bola8.v +=  (v3_proj - v4_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola8.v *= coef_atrito
+        
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola9 e a bola1 usando conservação do momento linear
+    if mag(bola9.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v33_proj = dot(bola1.v, direcao_colisao)
+        v44_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v44_proj - v33_proj) * direcao_colisao
+        bola9.v +=  (v33_proj - v44_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola9.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola10 e a bola1 usando conservação do momento linear
+    if mag(bola10.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola10.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v333_proj = dot(bola1.v, direcao_colisao)
+        v444_proj = dot(bola10.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v += (v444_proj - v333_proj) * direcao_colisao
+        bola10.v +=  (v333_proj - v444_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola10.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola11 e a bola1 usando conservação do momento linear
+    if mag(bola11.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola11.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v10_proj = dot(bola1.v, direcao_colisao)
+        v20_proj = dot(bola11.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v += (v20_proj - v10_proj) * direcao_colisao
+        bola11.v +=  (v10_proj - v20_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola11.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola12 e a bola1 usando conservação do momento linear
+    if mag(bola12.pos - bola1.pos) < bola1.radius* 2:
+       
+        direcao_colisao = norm(bola12.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v101_proj = dot(bola1.v, direcao_colisao)
+        v201_proj = dot(bola12.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v += (v201_proj - v101_proj) * direcao_colisao
+        bola12.v +=  (v101_proj - v201_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola12.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola13 e a bola1 usando conservação do momento linear
+    if mag(bola13.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola13.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v171_proj = dot(bola1.v, direcao_colisao)
+        v271_proj = dot(bola13.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v271_proj - v171_proj) * direcao_colisao
+        bola13.v +=  (v171_proj - v271_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola13.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola14 e a bola1 usando conservação do momento linear
+    if mag(bola14.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola14.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v181_proj = dot(bola1.v, direcao_colisao)
+        v281_proj = dot(bola14.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v281_proj - v181_proj) * direcao_colisao
+        bola14.v +=  (v181_proj - v281_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola14.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    # Verifica se há colisão entre a bola15 e a bola1 usando conservação do momento linear
+    if mag(bola15.pos - bola1.pos) < bola1.radius* 2:
+        
+        direcao_colisao = norm(bola15.pos - bola1.pos)
+
+        # Componente da velocidade na direção da colisão
+        v191_proj = dot(bola1.v, direcao_colisao)
+        v291_proj = dot(bola15.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola1.v +=  (v291_proj - v191_proj) * direcao_colisao
+        bola15.v +=  (v191_proj - v291_proj) * direcao_colisao
+        
+        bola1.v *= coef_atrito
+        bola15.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+
+    
+    if mag(bola2.pos - bola3.pos) < bola3.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola3.pos)
+
+        # Componente da velocidade na direção da colisão
+        v300_proj = dot(bola3.v, direcao_colisao)
+        v400_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola3.v +=  (v400_proj - v300_proj) * direcao_colisao
+        bola2.v +=  (v300_proj - v400_proj) * direcao_colisao
+        
+        bola3.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola4.pos) < bola4.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola4.pos)
+
+        # Componente da velocidade na direção da colisão
+        v301_proj = dot(bola4.v, direcao_colisao)
+        v401_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola4.v +=  (v401_proj - v301_proj) * direcao_colisao
+        bola2.v += (v301_proj - v401_proj) * direcao_colisao
+        
+        bola4.v *= coef_atrito
+        bola2.v *= coef_atrito
+
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola5.pos) < bola5.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola5.pos)
+
+        # Componente da velocidade na direção da colisão
+        v302_proj = dot(bola5.v, direcao_colisao)
+        v402_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola5.v +=  (v402_proj - v302_proj) * direcao_colisao
+        bola2.v +=  (v302_proj - v402_proj) * direcao_colisao
+        
+        bola5.v *= coef_atrito
+        bola2.v *= coef_atrito
+
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola6.pos) < bola6.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola6.pos)
+
+        # Componente da velocidade na direção da colisão
+        v302_proj = dot(bola6.v, direcao_colisao)
+        v402_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola6.v += (v402_proj - v302_proj) * direcao_colisao
+        bola2.v +=  (v302_proj - v402_proj) * direcao_colisao
+
+        bola6.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola7.pos) < bola7.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola7.pos)
+
+        # Componente da velocidade na direção da colisão
+        v303_proj = dot(bola7.v, direcao_colisao)
+        v403_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola7.v +=  (v403_proj - v303_proj) * direcao_colisao
+        bola2.v +=  (v303_proj - v403_proj) * direcao_colisao
+        
+        bola7.v *= coef_atrito
+        bola2.v *= coef_atrito
+#-------------------------------------------------------------------------------------------------- 
+    if mag(bola2.pos - bola8.pos) < bola8.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v304_proj = dot(bola8.v, direcao_colisao)
+        v404_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola8.v +=  (v404_proj - v304_proj) * direcao_colisao
+        bola2.v +=  (v304_proj - v404_proj) * direcao_colisao
+        
+        bola8.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v305_proj = dot(bola9.v, direcao_colisao)
+        v405_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v +=  (v405_proj - v305_proj) * direcao_colisao
+        bola2.v +=  (v305_proj - v405_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v306_proj = dot(bola10.v, direcao_colisao)
+        v406_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v406_proj - v306_proj) * direcao_colisao
+        bola2.v +=  (v306_proj - v406_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+ 
+    if mag(bola2.pos - bola11.pos) < bola11.radius* 2:
+       
+        direcao_colisao = norm(bola2.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v307_proj = dot(bola11.v, direcao_colisao)
+        v407_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v407_proj - v307_proj) * direcao_colisao
+        bola2.v +=  (v307_proj - v407_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v308_proj = dot(bola12.v, direcao_colisao)
+        v408_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v408_proj - v308_proj) * direcao_colisao
+        bola2.v +=  (v308_proj - v408_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v309_proj = dot(bola13.v, direcao_colisao)
+        v409_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v409_proj - v309_proj) * direcao_colisao
+        bola2.v +=  (v309_proj - v409_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v311_proj = dot(bola14.v, direcao_colisao)
+        v411_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v411_proj - v311_proj) * direcao_colisao
+        bola2.v +=  (v311_proj - v411_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola2.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola2.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v312_proj = dot(bola15.v, direcao_colisao)
+        v412_proj = dot(bola2.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v += (v412_proj - v312_proj) * direcao_colisao
+        bola2.v +=  (v312_proj - v412_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola2.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola4.pos) < bola4.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola4.pos)
+
+        # Componente da velocidade na direção da colisão
+        v313_proj = dot(bola4.v, direcao_colisao)
+        v413_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola4.v +=  (v413_proj - v313_proj) * direcao_colisao
+        bola3.v +=  (v313_proj - v413_proj) * direcao_colisao
+        
+        bola4.v *= coef_atrito
+        bola3.v *= coef_atrito
+        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola5.pos) < bola5.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola5.pos)
+
+        # Componente da velocidade na direção da colisão
+        v314_proj = dot(bola5.v, direcao_colisao)
+        v414_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola5.v +=  (v414_proj - v314_proj) * direcao_colisao
+        bola3.v +=  (v314_proj - v414_proj) * direcao_colisao
+        
+        bola5.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola6.pos) < bola6.radius* 2:
+       
+        direcao_colisao = norm(bola3.pos - bola6.pos)
+
+        # Componente da velocidade na direção da colisão
+        v315_proj = dot(bola6.v, direcao_colisao)
+        v415_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola6.v +=  (v415_proj - v315_proj) * direcao_colisao
+        bola3.v +=  (v315_proj - v415_proj) * direcao_colisao
+        
+        bola6.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola7.pos) < bola7.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola7.pos)
+
+        # Componente da velocidade na direção da colisão
+        v316_proj = dot(bola7.v, direcao_colisao)
+        v416_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola7.v +=  (v416_proj - v316_proj) * direcao_colisao
+        bola3.v +=  (v316_proj - v416_proj) * direcao_colisao
+        
+        bola7.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola8.pos) < bola8.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v317_proj = dot(bola8.v, direcao_colisao)
+        v417_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola8.v +=  (v417_proj - v317_proj) * direcao_colisao
+        bola3.v +=  (v317_proj - v417_proj) * direcao_colisao
+        
+        bola8.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola9.pos)
+
+        # Componente da velocidade na direção da colisão
+        v318_proj = dot(bola9.v, direcao_colisao)
+        v418_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v +=  (v418_proj - v318_proj) * direcao_colisao
+        bola3.v +=  (v318_proj - v418_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v319_proj = dot(bola10.v, direcao_colisao)
+        v419_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v419_proj - v319_proj) * direcao_colisao
+        bola3.v +=  (v319_proj - v419_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v321_proj = dot(bola11.v, direcao_colisao)
+        v421_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v421_proj - v321_proj) * direcao_colisao
+        bola3.v +=  (v321_proj - v421_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v322_proj = dot(bola12.v, direcao_colisao)
+        v422_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v422_proj - v322_proj) * direcao_colisao
+        bola3.v += (v322_proj - v422_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v323_proj = dot(bola13.v, direcao_colisao)
+        v423_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v423_proj - v323_proj) * direcao_colisao
+        bola3.v += (v323_proj - v423_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v324_proj = dot(bola14.v, direcao_colisao)
+        v424_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v424_proj - v324_proj) * direcao_colisao
+        bola3.v +=  (v324_proj - v424_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola3.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola3.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v325_proj = dot(bola15.v, direcao_colisao)
+        v425_proj = dot(bola3.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v += (v425_proj - v325_proj) * direcao_colisao
+        bola3.v +=  (v325_proj - v425_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola3.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola5.pos) < bola5.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola5.pos)
+
+        # Componente da velocidade na direção da colisão
+        v326_proj = dot(bola5.v, direcao_colisao)
+        v426_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola5.v +=  (v426_proj - v326_proj) * direcao_colisao
+        bola4.v +=  (v326_proj - v426_proj) * direcao_colisao
+        
+        bola5.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola6.pos) < bola6.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola6.pos)
+
+        # Componente da velocidade na direção da colisão
+        v327_proj = dot(bola6.v, direcao_colisao)
+        v427_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola6.v +=  (v427_proj - v327_proj) * direcao_colisao
+        bola4.v +=  (v327_proj - v427_proj) * direcao_colisao
+        
+        bola6.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola7.pos) < bola7.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola7.pos)
+
+        # Componente da velocidade na direção da colisão
+        v328_proj = dot(bola7.v, direcao_colisao)
+        v428_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola7.v +=  (v428_proj - v328_proj) * direcao_colisao
+        bola4.v +=  (v328_proj - v428_proj) * direcao_colisao
+        
+        bola7.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola8.pos) < bola8.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v329_proj = dot(bola8.v, direcao_colisao)
+        v429_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola8.v +=  (v429_proj - v329_proj) * direcao_colisao
+        bola4.v += (v329_proj - v429_proj) * direcao_colisao
+        
+        bola8.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola9.pos)
+
+        # Componente da velocidade na direção da colisão
+        v331_proj = dot(bola9.v, direcao_colisao)
+        v431_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v +=  (v431_proj - v331_proj) * direcao_colisao
+        bola4.v +=  (v331_proj - v431_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v332_proj = dot(bola10.v, direcao_colisao)
+        v432_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v432_proj - v332_proj) * direcao_colisao
+        bola4.v +=  (v332_proj - v432_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v333_proj = dot(bola11.v, direcao_colisao)
+        v433_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v433_proj - v333_proj) * direcao_colisao
+        bola4.v +=  (v333_proj - v433_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v334_proj = dot(bola12.v, direcao_colisao)
+        v434_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v434_proj - v334_proj) * direcao_colisao
+        bola4.v +=  (v334_proj - v434_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v335_proj = dot(bola13.v, direcao_colisao)
+        v435_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v435_proj - v335_proj) * direcao_colisao
+        bola4.v += (v335_proj - v435_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v336_proj = dot(bola14.v, direcao_colisao)
+        v436_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v += (v436_proj - v336_proj) * direcao_colisao
+        bola4.v +=  (v336_proj - v436_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola4.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola4.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v337_proj = dot(bola15.v, direcao_colisao)
+        v437_proj = dot(bola4.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v += (v437_proj - v337_proj) * direcao_colisao
+        bola4.v +=  (v337_proj - v437_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola4.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola6.pos) < bola6.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola6.pos)
+
+        # Componente da velocidade na direção da colisão
+        v338_proj = dot(bola6.v, direcao_colisao)
+        v438_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola6.v +=  (v438_proj - v338_proj) * direcao_colisao
+        bola5.v +=  (v338_proj - v438_proj) * direcao_colisao
+        
+        bola6.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola7.pos) < bola7.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola7.pos)
+
+        # Componente da velocidade na direção da colisão
+        v339_proj = dot(bola7.v, direcao_colisao)
+        v439_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola7.v += (v439_proj - v339_proj) * direcao_colisao
+        bola5.v +=  (v339_proj - v439_proj) * direcao_colisao
+        
+        bola7.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola8.pos) < bola8.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v341_proj = dot(bola8.v, direcao_colisao)
+        v441_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola8.v +=  (v441_proj - v341_proj) * direcao_colisao
+        bola5.v += (v341_proj - v441_proj) * direcao_colisao
+        
+        bola8.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola9.pos)
+
+        # Componente da velocidade na direção da colisão
+        v342_proj = dot(bola9.v, direcao_colisao)
+        v442_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v += (v442_proj - v342_proj) * direcao_colisao
+        bola5.v +=  (v342_proj - v442_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v343_proj = dot(bola10.v, direcao_colisao)
+        v443_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v443_proj - v343_proj) * direcao_colisao
+        bola5.v +=  (v343_proj - v443_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v344_proj = dot(bola11.v, direcao_colisao)
+        v444_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v444_proj - v344_proj) * direcao_colisao
+        bola5.v +=  (v344_proj - v444_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v345_proj = dot(bola12.v, direcao_colisao)
+        v445_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v445_proj - v345_proj) * direcao_colisao
+        bola5.v +=  (v345_proj - v445_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v346_proj = dot(bola13.v, direcao_colisao)
+        v446_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v446_proj - v346_proj) * direcao_colisao
+        bola5.v +=  (v346_proj - v446_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v347_proj = dot(bola14.v, direcao_colisao)
+        v447_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v447_proj - v347_proj) * direcao_colisao
+        bola5.v += (v347_proj - v447_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola5.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola5.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v348_proj = dot(bola15.v, direcao_colisao)
+        v448_proj = dot(bola5.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v +=  (v448_proj - v348_proj) * direcao_colisao
+        bola5.v +=  (v348_proj - v448_proj) * direcao_colisao
+    
+        bola15.v *= coef_atrito
+        bola5.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola7.pos) < bola7.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola7.pos)
+
+        # Componente da velocidade na direção da colisão
+        v349_proj = dot(bola7.v, direcao_colisao)
+        v449_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola7.v +=  (v449_proj - v349_proj) * direcao_colisao
+        bola6.v += (v349_proj - v449_proj) * direcao_colisao
+        
+        bola7.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola8.pos) < bola8.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v351_proj = dot(bola8.v, direcao_colisao)
+        v451_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola8.v +=  (v451_proj - v351_proj) * direcao_colisao
+        bola6.v +=  (v351_proj - v451_proj) * direcao_colisao
+        
+        bola8.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola9.pos)
+
+        # Componente da velocidade na direção da colisão
+        v352_proj = dot(bola9.v, direcao_colisao)
+        v452_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v +=  (v452_proj - v352_proj) * direcao_colisao
+        bola6.v +=  (v352_proj - v452_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v353_proj = dot(bola10.v, direcao_colisao)
+        v453_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v += (v453_proj - v353_proj) * direcao_colisao
+        bola6.v +=  (v353_proj - v453_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v354_proj = dot(bola11.v, direcao_colisao)
+        v454_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v454_proj - v354_proj) * direcao_colisao
+        bola6.v +=  (v354_proj - v454_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v355_proj = dot(bola12.v, direcao_colisao)
+        v455_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v455_proj - v355_proj) * direcao_colisao
+        bola6.v +=  (v355_proj - v455_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v356_proj = dot(bola13.v, direcao_colisao)
+        v456_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v456_proj - v356_proj) * direcao_colisao
+        bola6.v +=  (v356_proj - v456_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v357_proj = dot(bola14.v, direcao_colisao)
+        v457_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v457_proj - v357_proj) * direcao_colisao
+        bola6.v +=  (v357_proj - v457_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola6.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola6.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola6.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v358_proj = dot(bola15.v, direcao_colisao)
+        v458_proj = dot(bola6.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v +=  (v458_proj - v358_proj) * direcao_colisao
+        bola6.v +=  (v358_proj - v458_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola6.v *= coef_atrito       
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola8.pos) < bola8.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola8.pos)
+
+        # Componente da velocidade na direção da colisão
+        v361_proj = dot(bola8.v, direcao_colisao)
+        v461_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola8.v +=  (v461_proj - v361_proj) * direcao_colisao
+        bola7.v +=  (v361_proj - v461_proj) * direcao_colisao
+        
+        bola8.v *= coef_atrito
+        bola7.v *= coef_atrito             
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola9.pos)
+
+        # Componente da velocidade na direção da colisão
+        v362_proj = dot(bola9.v, direcao_colisao)
+        v462_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v +=  (v462_proj - v362_proj) * direcao_colisao
+        bola7.v +=  (v362_proj - v462_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola7.v *= coef_atrito            
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v363_proj = dot(bola10.v, direcao_colisao)
+        v463_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v463_proj - v363_proj) * direcao_colisao
+        bola7.v +=  (v363_proj - v463_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola7.v *= coef_atrito    
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v364_proj = dot(bola11.v, direcao_colisao)
+        v464_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v464_proj - v364_proj) * direcao_colisao
+        bola7.v +=  (v364_proj - v464_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola7.v *= coef_atrito    
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v365_proj = dot(bola12.v, direcao_colisao)
+        v465_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v465_proj - v365_proj) * direcao_colisao
+        bola7.v +=  (v365_proj - v465_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola7.v *= coef_atrito    
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v366_proj = dot(bola13.v, direcao_colisao)
+        v466_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v += (v466_proj - v366_proj) * direcao_colisao
+        bola7.v +=  (v366_proj - v466_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola7.v *= coef_atrito   
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v367_proj = dot(bola14.v, direcao_colisao)
+        v467_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v467_proj - v367_proj) * direcao_colisao
+        bola7.v +=  (v367_proj - v467_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola7.v *= coef_atrito   
+        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola7.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola7.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v359_proj = dot(bola15.v, direcao_colisao)
+        v459_proj = dot(bola7.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v +=  (v459_proj - v359_proj) * direcao_colisao
+        bola7.v +=  (v359_proj - v459_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola7.v *= coef_atrito             
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola9.pos) < bola9.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola9.pos)
+
+        # Componente da velocidade na direção da colisão
+        v370_proj = dot(bola9.v, direcao_colisao)
+        v470_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola9.v += (v470_proj - v370_proj) * direcao_colisao
+        bola8.v +=  (v370_proj - v470_proj) * direcao_colisao
+        
+        bola9.v *= coef_atrito
+        bola8.v *= coef_atrito        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v371_proj = dot(bola10.v, direcao_colisao)
+        v471_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v471_proj - v371_proj) * direcao_colisao
+        bola8.v +=  (v371_proj - v471_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola8.v *= coef_atrito        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v372_proj = dot(bola11.v, direcao_colisao)
+        v472_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v472_proj - v372_proj) * direcao_colisao
+        bola8.v +=  (v372_proj - v472_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola8.v *= coef_atrito     
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v373_proj = dot(bola12.v, direcao_colisao)
+        v473_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v473_proj - v373_proj) * direcao_colisao
+        bola8.v +=  (v373_proj - v473_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola8.v *= coef_atrito     
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v374_proj = dot(bola13.v, direcao_colisao)
+        v474_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v474_proj - v374_proj) * direcao_colisao
+        bola8.v +=  (v374_proj - v474_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola8.v *= coef_atrito     
+
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v368_proj = dot(bola14.v, direcao_colisao)
+        v468_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v468_proj - v368_proj) * direcao_colisao
+        bola8.v +=  (v368_proj - v468_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola8.v *= coef_atrito         
+#--------------------------------------------------------------------------------------------------
+    if mag(bola8.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola8.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v369_proj = dot(bola15.v, direcao_colisao)
+        v469_proj = dot(bola8.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v +=  (v469_proj - v369_proj) * direcao_colisao
+        bola8.v +=  (v369_proj - v469_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola8.v *= coef_atrito        
+        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola9.pos - bola10.pos) < bola10.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola10.pos)
+
+        # Componente da velocidade na direção da colisão
+        v375_proj = dot(bola10.v, direcao_colisao)
+        v475_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola10.v +=  (v475_proj - v375_proj) * direcao_colisao
+        bola9.v +=  (v375_proj - v475_proj) * direcao_colisao
+        
+        bola10.v *= coef_atrito
+        bola9.v *= coef_atrito            
+#--------------------------------------------------------------------------------------------------
+    if mag(bola9.pos - bola11.pos) < bola11.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v376_proj = dot(bola11.v, direcao_colisao)
+        v476_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v += (v476_proj - v376_proj) * direcao_colisao
+        bola9.v +=  (v376_proj - v476_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola9.v *= coef_atrito            
+#--------------------------------------------------------------------------------------------------
+    if mag(bola9.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v377_proj = dot(bola12.v, direcao_colisao)
+        v477_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v += (v477_proj - v377_proj) * direcao_colisao
+        bola9.v +=  (v377_proj - v477_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola9.v *= coef_atrito                     
+#--------------------------------------------------------------------------------------------------
+    if mag(bola9.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v378_proj = dot(bola13.v, direcao_colisao)
+        v478_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v478_proj - v378_proj) * direcao_colisao
+        bola9.v +=  (v378_proj - v478_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola9.v *= coef_atrito         
+#--------------------------------------------------------------------------------------------------
+    if mag(bola9.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v379_proj = dot(bola14.v, direcao_colisao)
+        v479_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v479_proj - v379_proj) * direcao_colisao
+        bola9.v +=  (v379_proj - v479_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola9.v *= coef_atrito             
+#--------------------------------------------------------------------------------------------------
+    if mag(bola9.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola9.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v380_proj = dot(bola15.v, direcao_colisao)
+        v480_proj = dot(bola9.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v +=  (v480_proj - v380_proj) * direcao_colisao
+        bola9.v +=  (v380_proj - v480_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola9.v *= coef_atrito              
+#--------------------------------------------------------------------------------------------------
+    if mag(bola10.pos - bola11.pos) < bola11.radius* 2:
+       
+        direcao_colisao = norm(bola10.pos - bola11.pos)
+
+        # Componente da velocidade na direção da colisão
+        v382_proj = dot(bola11.v, direcao_colisao)
+        v482_proj = dot(bola10.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola11.v +=  (v482_proj - v382_proj) * direcao_colisao
+        bola10.v +=  (v382_proj - v482_proj) * direcao_colisao
+        
+        bola11.v *= coef_atrito
+        bola10.v *= coef_atrito     
+#--------------------------------------------------------------------------------------------------
+    if mag(bola10.pos - bola12.pos) < bola12.radius* 2:
+        
+        direcao_colisao = norm(bola10.pos - bola12.pos)
+
+        # Componente da velocidade na direção da colisão
+        v383_proj = dot(bola12.v, direcao_colisao)
+        v483_proj = dot(bola10.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola12.v +=  (v483_proj - v383_proj) * direcao_colisao
+        bola10.v +=  (v383_proj - v483_proj) * direcao_colisao
+        
+        bola12.v *= coef_atrito
+        bola10.v *= coef_atrito     
+#--------------------------------------------------------------------------------------------------
+    if mag(bola10.pos - bola13.pos) < bola13.radius* 2:
+        
+        direcao_colisao = norm(bola10.pos - bola13.pos)
+
+        # Componente da velocidade na direção da colisão
+        v384_proj = dot(bola13.v, direcao_colisao)
+        v484_proj = dot(bola10.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola13.v +=  (v484_proj - v384_proj) * direcao_colisao
+        bola10.v +=  (v384_proj - v484_proj) * direcao_colisao
+        
+        bola13.v *= coef_atrito
+        bola10.v *= coef_atrito   
+#--------------------------------------------------------------------------------------------------
+    if mag(bola10.pos - bola14.pos) < bola14.radius* 2:
+        
+        direcao_colisao = norm(bola10.pos - bola14.pos)
+
+        # Componente da velocidade na direção da colisão
+        v385_proj = dot(bola14.v, direcao_colisao)
+        v485_proj = dot(bola10.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola14.v +=  (v485_proj - v385_proj) * direcao_colisao
+        bola10.v +=  (v385_proj - v485_proj) * direcao_colisao
+        
+        bola14.v *= coef_atrito
+        bola10.v *= coef_atrito   
+
+#--------------------------------------------------------------------------------------------------
+    if mag(bola10.pos - bola15.pos) < bola15.radius* 2:
+        
+        direcao_colisao = norm(bola10.pos - bola15.pos)
+
+        # Componente da velocidade na direção da colisão
+        v381_proj = dot(bola15.v, direcao_colisao)
+        v481_proj = dot(bola10.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola15.v +=  (v481_proj - v381_proj) * direcao_colisao
+        bola10.v +=  (v381_proj - v481_proj) * direcao_colisao
+        
+        bola15.v *= coef_atrito
+        bola10.v *= coef_atrito            
+#--------------------------------------------------------------------------------------------------
+    if mag(bola11.pos - bola12.pos) < bola12.radius* 2:
+            
+            direcao_colisao = norm(bola11.pos - bola12.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v387_proj = dot(bola12.v, direcao_colisao)
+            v487_proj = dot(bola11.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola12.v +=  (v487_proj - v387_proj) * direcao_colisao
+            bola11.v +=  (v387_proj - v487_proj) * direcao_colisao
+            
+            bola12.v *= coef_atrito
+            bola11.v *= coef_atrito   
+#--------------------------------------------------------------------------------------------------
+    if mag(bola11.pos - bola13.pos) < bola13.radius* 2:
+            
+            direcao_colisao = norm(bola11.pos - bola13.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v388_proj = dot(bola13.v, direcao_colisao)
+            v488_proj = dot(bola11.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola13.v +=  (v488_proj - v388_proj) * direcao_colisao
+            bola11.v +=  (v388_proj - v488_proj) * direcao_colisao
+            
+            bola13.v *= coef_atrito
+            bola11.v *= coef_atrito
+#--------------------------------------------------------------------------------------------------
+    if mag(bola11.pos - bola14.pos) < bola14.radius* 2:
+            
+            direcao_colisao = norm(bola11.pos - bola14.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v386_proj = dot(bola14.v, direcao_colisao)
+            v486_proj = dot(bola11.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola14.v += (v486_proj - v386_proj) * direcao_colisao
+            bola11.v +=  (v386_proj - v486_proj) * direcao_colisao
+            
+            bola14.v *= coef_atrito
+            bola11.v *= coef_atrito   
+#--------------------------------------------------------------------------------------------------
+    if mag(bola11.pos - bola15.pos) < bola15.radius* 2:
+            
+            direcao_colisao = norm(bola11.pos - bola15.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v389_proj = dot(bola15.v, direcao_colisao)
+            v489_proj = dot(bola11.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola15.v += (v489_proj - v389_proj) * direcao_colisao
+            bola11.v +=  (v389_proj - v489_proj) * direcao_colisao
+            
+            bola15.v *= coef_atrito
+            bola11.v *= coef_atrito        
+#--------------------------------------------------------------------------------------------------
+    if mag(bola12.pos - bola13.pos) < bola13.radius* 2:
+            
+            direcao_colisao = norm(bola12.pos - bola13.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v392_proj = dot(bola13.v, direcao_colisao)
+            v492_proj = dot(bola12.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola13.v +=  (v492_proj - v392_proj) * direcao_colisao
+            bola12.v +=  (v392_proj - v492_proj) * direcao_colisao
+            
+            bola13.v *= coef_atrito
+            bola12.v *= coef_atrito 
+#--------------------------------------------------------------------------------------------------
+    if mag(bola12.pos - bola14.pos) < bola14.radius* 2:
+            
+            direcao_colisao = norm(bola12.pos - bola14.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v393_proj = dot(bola14.v, direcao_colisao)
+            v493_proj = dot(bola12.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola14.v +=  (v493_proj - v393_proj) * direcao_colisao
+            bola12.v +=  (v393_proj - v493_proj) * direcao_colisao
+            
+            bola14.v *= coef_atrito
+            bola12.v *= coef_atrito 
+#--------------------------------------------------------------------------------------------------
+    if mag(bola12.pos - bola15.pos) < bola15.radius* 2:
+            
+            direcao_colisao = norm(bola12.pos - bola15.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v391_proj = dot(bola15.v, direcao_colisao)
+            v491_proj = dot(bola12.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola15.v +=  (v491_proj - v391_proj) * direcao_colisao
+            bola12.v +=  (v391_proj - v491_proj) * direcao_colisao
+            
+            bola15.v *= coef_atrito
+            bola12.v *= coef_atrito                
+#--------------------------------------------------------------------------------------------------
+    if mag(bola13.pos - bola14.pos) < bola14.radius* 2:
+            
+            direcao_colisao = norm(bola13.pos - bola14.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v394_proj = dot(bola14.v, direcao_colisao)
+            v494_proj = dot(bola13.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola14.v +=  (v494_proj - v394_proj) * direcao_colisao
+            bola13.v +=  (v394_proj - v494_proj) * direcao_colisao
+            
+            bola14.v *= coef_atrito
+            bola13.v *= coef_atrito 
+#--------------------------------------------------------------------------------------------------
+    if mag(bola13.pos - bola15.pos) < bola15.radius* 2:
+            
+            direcao_colisao = norm(bola13.pos - bola15.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v395_proj = dot(bola15.v, direcao_colisao)
+            v495_proj = dot(bola13.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola15.v +=  (v495_proj - v395_proj) * direcao_colisao
+            bola13.v +=  (v395_proj - v495_proj) * direcao_colisao
+            
+            bola15.v *= coef_atrito
+            bola13.v *= coef_atrito 
+#--------------------------------------------------------------------------------------------------
+    if mag(bola14.pos - bola15.pos) < bola15.radius* 2:
+            
+            direcao_colisao = norm(bola14.pos - bola15.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v396_proj = dot(bola15.v, direcao_colisao)
+            v496_proj = dot(bola14.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola15.v +=  (v496_proj - v396_proj) * direcao_colisao
+            bola14.v +=  (v396_proj - v496_proj) * direcao_colisao
+            
+            bola15.v *= coef_atrito
+            bola14.v *= coef_atrito 
+
+
+
+
+
+#/--------------------------------------------------------------------------------------------------/
+# Verifica se há colisão com as paredes e reflete a velocidade
+    if abs(bola_sinuca.pos.z) >= 4.8:#5
+        bola_sinuca.v.z *= -1
+
+    if abs(bola_sinuca.pos.x) >= 9.8:#10
+        bola_sinuca.v.x *= -1
+
+    # Verifica se a bola1 atinge algum buraco 
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola1.pos - buraco.pos) < buraco.radius:
+            bola1.visible = True
+            bola1.pos = vector(4,-0.6,6.5)
+            bola1.v=bola1.v * 0.000001
+    # Verifica se há colisão com a bola1 e reflete a velocidade
+    if abs(bola1.pos.z) >= 4.8:
+        bola1.v.z *= -1
+
+    if abs(bola1.pos.x) >= 9.8:
+        bola1.v.x *= -1
+
+    # Atualiza a posição da bola1
+    bola1.pos += bola1.v * 0.01  # 0.01 é a massa
+#------------------------------------------------------------------------------ 
+    if mag(bola_sinuca.pos - bola2.pos) < bola2.radius* 2:
+        
+        direcao_colisao = norm(bola_sinuca.pos - bola2.pos)
+
+        # Componente da velocidade na direção da colisão
+        v3_proj = dot(bola2.v, direcao_colisao)
+        v4_proj = dot(bola_sinuca.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola2.v +=  (v4_proj - v3_proj) * direcao_colisao
+        bola_sinuca.v +=  (v3_proj - v4_proj) * direcao_colisao
+
+    
+
+    # Verifica se a bola2 atinge algum buraco 
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola2.pos - buraco.pos) < buraco.radius:
+            bola2.visible = True
+            bola2.pos = vector(4.7,-0.6,6.5)
+            bola2.v=bola2.v * 0.000000000000001
+    #Verifica colisao com alguma das paredes
+    if abs(bola2.pos.z) >= 4.8:
+        bola2.v.z *= -1
+
+    if abs(bola2.pos.x) >= 9.8:
+        bola2.v.x *= -1
+
+    # Atualiza a posição da bola
+    bola2.pos += bola2.v * 0.01  # 0.01 é a massa
+#-----------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola3.pos) < bola3.radius* 2:
+        
+        direcao_colisao = norm(bola_sinuca.pos - bola3.pos)
+
+        # Componente da velocidade na direção da colisão
+        v5_proj = dot(bola3.v, direcao_colisao)
+        v6_proj = dot(bola_sinuca.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola3.v +=  (v6_proj - v5_proj) * direcao_colisao
+        bola_sinuca.v +=  (v5_proj - v6_proj) * direcao_colisao
+
+    
+
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola3.pos - buraco.pos) < buraco.radius:
+            bola3.visible = True
+            bola3.pos = vector(3.5,-0.6,5.8)
+            bola3.v=bola3.v * 0.0000000000001
+            
+    
+    if abs(bola3.pos.z) >= 4.8:
+        bola3.v.z *= -1
+
+    if abs(bola3.pos.x) >= 9.8:
+        bola3.v.x *= -1
+
+    # Atualiza a posição da bola
+    bola3.pos += bola3.v * 0.01  # 0.01 é a massa
+#----------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola4.pos) < bola4.radius* 2:
+        
+        direcao_colisao = norm(bola_sinuca.pos - bola4.pos)
+
+        # Componente da velocidade na direção da colisão
+        v7_proj = dot(bola4.v, direcao_colisao)
+        v8_proj = dot(bola_sinuca.v, direcao_colisao)
+
+        # Atualiza as velocidades após a colisão
+        bola4.v +=  (v8_proj - v7_proj) * direcao_colisao
+        bola_sinuca.v +=  (v7_proj - v8_proj) * direcao_colisao
+
+    
+
+   
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola4.pos - buraco.pos) < buraco.radius:
+            bola4.visible = True
+            bola4.pos = vector(6,-0.6,6.3)
+            bola4.v=bola4.v * 0.0000000000001
+            
+    
+    if abs(bola4.pos.z) >= 4.8:
+        bola4.v.z *= -1
+
+    if abs(bola4.pos.x) >= 9.8:
+        bola4.v.x *= -1
+
+    # Atualiza a posição da bola
+    bola4.pos += bola4.v * 0.01  # 0.01 é a massa
+
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola5.pos) < bola5.radius* 2:
+            
+            direcao_colisao = norm(bola_sinuca.pos - bola5.pos)
+    
+            # Componente da velocidade na direção da colisão
+            v9_proj = dot(bola5.v, direcao_colisao)
+            v10_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+            # Atualiza as velocidades após a colisão
+            bola5.v +=  (v10_proj - v9_proj) * direcao_colisao
+            bola_sinuca.v +=  (v9_proj - v10_proj) * direcao_colisao
+
+    
+
+   
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola5.pos - buraco.pos) < buraco.radius:
+            bola5.visible = True
+            bola5.pos = vector(5.8,-0.6,6.2)
+            bola5.v=bola5.v * 0.000000000001
+    # Verifica se há colisão com a bola1 e reflete a velocidade
+    if abs(bola5.pos.z) >= 4.8:
+        bola5.v.z *= -1
+
+    if abs(bola5.pos.x) >= 9.8:
+        bola5.v.x *= -1
+
+    # Atualiza a posição da bola
+    bola5.pos += bola5.v * 0.01 
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola6.pos) < bola6.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola6.pos)
+    
+        v11_proj = dot(bola6.v, direcao_colisao)
+        v12_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola6.v +=  (v12_proj - v11_proj) * direcao_colisao
+        bola_sinuca.v +=  (v11_proj - v12_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola6.pos - buraco.pos) < buraco.radius:
+            bola6.visible = True
+            bola6.pos = vector(2.7,-0.6,5.9)
+            bola6.v=bola6.v * 0.0000000000001
+    if abs(bola6.pos.z) >= 4.8:
+        bola6.v.z *= -1
+    
+    if abs(bola6.pos.x) >= 9.8:
+        bola6.v.x *= -1
+    
+    bola6.pos += bola6.v * 0.01  # 0.01
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola7.pos) < bola7.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola7.pos)
+    
+        v13_proj = dot(bola7.v, direcao_colisao)
+        v14_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola7.v +=  (v14_proj - v13_proj) * direcao_colisao
+        bola_sinuca.v +=  (v13_proj - v14_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola7.pos - buraco.pos) < buraco.radius:
+            bola7.visible = True
+            bola7.pos = vector(2.3,-0.6,6)
+            bola7.v=bola7.v * 0.00000000000001
+    if abs(bola7.pos.z) >= 4.8:
+        bola7.v.z *= -1
+    
+    if abs(bola7.pos.x) >= 9.8:
+        bola7.v.x *= -1
+    
+    bola7.pos += bola7.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola8.pos) < bola8.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola8.pos)
+    
+        v15_proj = dot(bola8.v, direcao_colisao)
+        v16_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola8.v +=  (v16_proj - v15_proj) * direcao_colisao
+        bola_sinuca.v +=  (v15_proj - v16_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola8.pos - buraco.pos) < buraco.radius:
+            bola8.visible = True
+            bola8.pos = vector(4.5,-0.6,6)
+            bola8.v=bola8.v * 0.0000000000001
+    if abs(bola8.pos.z) >= 4.8:
+        bola8.v.z *= -1
+    
+    if abs(bola8.pos.x) >= 9.8:
+        bola8.v.x *= -1
+    
+    bola8.pos += bola8.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola9.pos) < bola9.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola9.pos)
+    
+        v17_proj = dot(bola9.v, direcao_colisao)
+        v18_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola9.v +=  (v18_proj - v17_proj) * direcao_colisao
+        bola_sinuca.v +=  (v17_proj - v18_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola9.pos - buraco.pos) < buraco.radius:
+            bola9.visible = True
+            bola9.pos = vector(5.2,-0.6,6.2)
+            bola9.v=bola9.v * 0.0000000000001
+    if abs(bola9.pos.z) >= 4.8:
+        bola9.v.z *= -1
+    
+    if abs(bola9.pos.x) >= 9.8:
+        bola9.v.x *= -1
+    
+    bola9.pos += bola9.v * 0.01  
+
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola10.pos) < bola10.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola10.pos)
+    
+        v19_proj = dot(bola10.v, direcao_colisao)
+        v20_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola10.v +=  (v20_proj - v19_proj) * direcao_colisao
+        bola_sinuca.v +=  (v19_proj - v20_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola10.pos - buraco.pos) < buraco.radius:
+            bola10.visible = True
+            bola10.pos = vector(2.8,-0.6,6.3)
+            bola10.v=bola10.v * 0.00000000000001
+    if abs(bola10.pos.z) >= 4.8:
+        bola10.v.z *= -1
+    
+    if abs(bola10.pos.x) >= 9.8:
+        bola10.v.x *= -1
+    
+    bola10.pos += bola10.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola11.pos) < bola11.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola11.pos)
+    
+        v21_proj = dot(bola11.v, direcao_colisao)
+        v22_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola11.v +=  (v22_proj - v21_proj) * direcao_colisao
+        bola_sinuca.v +=  (v21_proj - v22_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola11.pos - buraco.pos) < buraco.radius:
+            bola11.visible = True
+            bola11.pos = vector(3.3,-0.6,6.5)
+            bola11.v=bola11.v * 0.00000000001
+    if abs(bola11.pos.z) >= 4.8:
+        bola11.v.z *= -1
+    
+    if abs(bola11.pos.x) >= 9.8:
+        bola11.v.x *= -1
+    
+    bola11.pos += bola11.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola12.pos) < bola12.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola12.pos)
+    
+        v23_proj = dot(bola12.v, direcao_colisao)
+        v24_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola12.v +=  (v24_proj - v23_proj) * direcao_colisao
+        bola_sinuca.v +=  (v23_proj - v24_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola12.pos - buraco.pos) < buraco.radius:
+            bola12.visible = True
+            bola12.pos = vector(2.5,-0.6,6.2)
+            bola12.v=bola12.v * 0.00000000000001
+    if abs(bola12.pos.z) >= 4.8:
+        bola12.v.z *= -1
+    
+    if abs(bola12.pos.x) >= 9.8:
+        bola12.v.x *= -1
+    
+    bola12.pos += bola12.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola13.pos) < bola13.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola13.pos)
+    
+        v25_proj = dot(bola13.v, direcao_colisao)
+        v26_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola13.v +=  (v26_proj - v25_proj) * direcao_colisao
+        bola_sinuca.v +=  (v25_proj - v26_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola13.pos - buraco.pos) < buraco.radius:
+            bola13.visible = True
+            bola13.pos = vector(5.8,-0.6,6.8)
+            bola13.v=bola13.v * 0.000000000000001
+    if abs(bola13.pos.z) >= 4.8:
+        bola13.v.z *= -1
+    
+    if abs(bola13.pos.x) >= 9.8:
+        bola13.v.x *= -1
+    
+    bola13.pos += bola13.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola14.pos) < bola14.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola14.pos)
+    
+        v27_proj = dot(bola14.v, direcao_colisao)
+        v28_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola14.v +=  (v28_proj - v27_proj) * direcao_colisao
+        bola_sinuca.v += (v27_proj - v28_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola14.pos - buraco.pos) < buraco.radius:
+            bola14.visible = True
+            bola14.pos = vector(2,-0.6,6.3)
+            bola14.v=bola14.v * 0.0000000001
+    if abs(bola14.pos.z) >= 4.8:
+        bola14.v.z *= -1
+    
+    if abs(bola14.pos.x) >= 9.8:
+        bola14.v.x *= -1
+    
+    bola14.pos += bola14.v * 0.01  
+#--------------------------------------------------------------------------------------------------
+    if mag(bola_sinuca.pos - bola15.pos) < bola15.radius* 2:
+        direcao_colisao = norm(bola_sinuca.pos - bola15.pos)
+    
+        v29_proj = dot(bola15.v, direcao_colisao)
+        v30_proj = dot(bola_sinuca.v, direcao_colisao)
+    
+        bola15.v += (v30_proj - v29_proj) * direcao_colisao
+        bola_sinuca.v +=  (v29_proj - v30_proj) * direcao_colisao
+    
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola15.pos - buraco.pos) < buraco.radius:
+            bola15.visible = True
+            bola15.pos = vector(2.5,-0.6,6.4)
+            bola15.v=bola15.v * 0.0000000001
+    if abs(bola15.pos.z) >= 4.8:
+        bola15.v.z *= -1
+    
+    if abs(bola15.pos.x) >= 9.8:
+        bola15.v.x *= -1
+    
+    bola15.pos += bola15.v * 0.01  
+#--------------------------------------------------------------------------------------------------/  
+
+
