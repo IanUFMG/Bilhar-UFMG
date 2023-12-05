@@ -108,14 +108,14 @@ while bola_sinuca.pos.y >= -0.1:  # Continue até que a bola atinja o solo
     taco.pos = bola_sinuca.pos
     taco.axis = vector(scene.mouse.pos.x, 0, scene.mouse.pos.y) - bola_sinuca.pos
 
-    # Verifica se a bola de sinuca atinge algum buraco::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    #for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
-        #if mag(bola_sinuca.pos - buraco.pos) < buraco.radius:
-            #bola_sinuca.visible=True
-            #taco.visible=False
-            #bola_sinuca.pos=vector(6.5,-0.6,5.8)
-            #label(pos=vector(0, 1, 0), text="Bola branca morta", height=20, color=color.red)
-            #break  # A bola de sinuca atingiu um buraco, encerrando a simulação
+    # Verifica se a bola de sinuca atinge algum buraco
+    for buraco in [buraco1, buraco2, buraco3, buraco4,buraco5,buraco6]:
+        if mag(bola_sinuca.pos - buraco.pos) < buraco.radius:
+            bola_sinuca.visible=True
+            taco.visible=False
+            bola_sinuca.pos=vector(6.5,-0.6,5.8)
+            label(pos=vector(0, 1, 0), text="Bola branca morta", height=20, color=color.red)
+            break  # A bola de sinuca atingiu um buraco, encerrando a simulação
 #--------------------------------------------------------------------------------------------------
     # Verifica se há colisão entre a bola de sinuca e a bola1 usando conservação do momento linear
     if mag(bola_sinuca.pos - bola1.pos) < bola1.radius * 2 :
